@@ -51,11 +51,13 @@ void process_list(struct list_node *list) {
       }
       if (connect(s, (const struct sockaddr *) &cur->addr, sizeof(cur->addr)) < 0) {
         printf("Waiting for %s ...\n", cur->name);
+        fflush(stdout);
         prev = cur;
         cur = cur->next;
       } else {
         /* Success */
-        printf("READY: %s\n", cur->name);
+        printf("PORT READY: %s\n", cur->name);
+        fflush(stdout);
         if (cur == list) {
           prev = cur;
           cur = list = list->next;

@@ -1,6 +1,6 @@
 Summary: A small utility to wait for network availability
 Name: wait4ports
-Version: 0.0.2
+Version: 0.0.3
 Release: 1
 License: GPL
 Group: Applications/Utilites
@@ -36,5 +36,8 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Jun 28 2015 Erik Ogan <erik@stealthymonkeys.com> - 0.0.3-1
+- flush output on write
+
 * Sat Jun 27 2015 Erik Ogan <erik@stealthymonkeys.com> - 0.0.2-1
 - Initial build.
