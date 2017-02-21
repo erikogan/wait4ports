@@ -1,10 +1,11 @@
 Summary: A small utility to wait for network availability
 Name: wait4ports
-Version: 0.0.3
+Version: 0.0.4
 Release: 1
-License: GPL
+License: MPL 2.0
 Group: Applications/Utilites
 URL: https://github.com/erikogan/wait4ports
+# https://github.com/erikogan/%{name}/archive/v%{version}.tar.gz
 Source0: %{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 
@@ -36,6 +37,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Feb 21 2017 Erik Ogan <erik@stealthymonkeys.com> - 0.0.4-1
+- Add Alpine APKBUILD
+- Mozilla License 2.0
+
 * Sun Jun 28 2015 Erik Ogan <erik@stealthymonkeys.com> - 0.0.3-1
 - flush output on write
 
