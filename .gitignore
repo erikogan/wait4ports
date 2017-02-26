@@ -1,2 +1,3 @@
 *.o
 wait4ports
+alpinelinux/.keys/*.rsa
