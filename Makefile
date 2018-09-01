@@ -1,7 +1,10 @@
 CFLAGS=-g
 
-wait4ports: main.o
-	$(CC) -o $@ $^
+wait4ports: main.o list.o
+	$(CC) $(CFLAGS) -o $@ $^
+
+list.o: list.c list.h usage.h
+	$(CC) $(CFLAGS) -c -o $@ $<
 
 install:
 	mkdir -p $(PREFIX)/usr/bin
