@@ -22,7 +22,7 @@ is available. (Currently in the `@testing` repository.)
 Options can also be enabled via environment variables:
 
 `WAIT4PORTS_VERBOSE`: Verbosity is on by default, but setting this value to
-`n[o]`, `f[alse]`, or `of[f]` will disable it.
+`0`, `n[o]`, `f[alse]`, or `of[f]` will disable it.
 
 `WAIT4PORTS_SLEEP`: Specify the number of seconds to sleep between rounds.
 (Default: 1)

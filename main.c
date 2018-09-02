@@ -91,6 +91,7 @@ unsigned short verbosity_from_env(char *name) {
   if (!value) return 1;
 
   switch(*value) {
+    case '0':
     case 'n':
     case 'N':
     case 'f':
