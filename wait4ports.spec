@@ -37,6 +37,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Sep  1  2018 Erik Ogan <erik@stealthymonkeys.com> - 0.1.0-1
+- Support IPv6
+- Support hostname lookups
+- Better error notifications
+
 * Tue Feb 21 2017 Erik Ogan <erik@stealthymonkeys.com> - 0.0.4-1
 - Add Alpine APKBUILD
 - Mozilla License 2.0
