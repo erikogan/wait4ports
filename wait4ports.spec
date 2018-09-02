@@ -37,6 +37,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Sep  1  2018 Erik Ogan <erik@stealthymonkeys.com> - 0.2.1-1
+- Add -v for version printing
+
 * Sat Sep  1  2018 Erik Ogan <erik@stealthymonkeys.com> - 0.2.0-1
 - Allow verbosity and sleep interval to be set via options or environment variables
 
