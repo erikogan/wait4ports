@@ -5,7 +5,6 @@
 #include <sys/types.h>
 #include <netdb.h>
 
-/* This should probably be overridable via an env var */
 #define SLEEP_SECONDS 1
 
 struct list_node {
@@ -17,4 +16,4 @@ struct list_node {
 };
 
 struct list_node *build_list(int, char **);
-void process_list(struct list_node *);
+void process_list(struct list_node *, int);

@@ -12,7 +12,7 @@
 #include <netinet/in.h>
 
 #include "list.h"
-#include "usage.h"
+#include "util.h"
 
 struct list_node *build_node(char *);
 void extract_parts(char *, char **, char **, char **, char **);
@@ -20,6 +20,7 @@ struct addrinfo *configure_hints(struct addrinfo *);
 void normalize_name(struct list_node *, char *, char *, char *);
 int connect_to_address(struct addrinfo *, char *);
 void remove_node(struct list_node **, struct list_node **, struct list_node **);
+void verbose_connection(struct addrinfo *, char *);
 
 struct addrinfo *configure_hints(struct addrinfo *hints) {
   memset (hints, 0, sizeof (*hints));
@@ -35,9 +36,10 @@ struct list_node *build_list(int argc, char **argv) {
   int i;
   struct list_node *head, *tail, *candidate;
 
-  head = tail = build_node(argv[1]);
+  /* the program (and options) have been shaved off the front, start at 0 */
+  head = tail = build_node(argv[0]);
 
-  for (i = 2 ; i < argc ; i++) {
+  for (i = 1 ; i < argc ; i++) {
     candidate = build_node(argv[i]);
     if (candidate) {
       tail->next = candidate;
@@ -78,10 +80,10 @@ struct list_node *build_node(char *composite) {
   return result;
 }
 
-void process_list(struct list_node *list) {
+void process_list(struct list_node *list, int sleep_seconds) {
   struct list_node *prev, *cur;
   struct addrinfo *address;
-  int connected;
+  int connected = -1;
 
   while (list) {
     cur = list;
@@ -105,7 +107,7 @@ void process_list(struct list_node *list) {
       }
     }
 
-    if (list) sleep(SLEEP_SECONDS);
+    if (list) sleep(sleep_seconds);
   }
 }
 
@@ -167,8 +169,8 @@ void normalize_name(struct list_node *node, char *name, char *host, char *port) 
     return;
   }
 
-    int hlen = strnlen(node->addresses->ai_canonname, 255),
-        plen = strnlen(port, 255);
+    size_t hlen = strnlen(node->addresses->ai_canonname, 255),
+           plen = strnlen(port, 255);
 
     node->name = calloc(hlen + plen + 2, sizeof(char));
     strncpy(node->name, node->addresses->ai_canonname, hlen);
@@ -180,13 +182,35 @@ void normalize_name(struct list_node *node, char *name, char *host, char *port) 
 
 int connect_to_address(struct addrinfo *address, char *name) {
   int s, result;
-  u_int16_t port;
-  char *ip = NULL;
+  unsigned short vflag = verbose();
 
   if ((s = socket(address->ai_family, address->ai_socktype, address->ai_protocol)) < 0) {
     perror("socket");
     exit(127);
   }
+
+  if (vflag) verbose_connection(address, name);
+
+  if ((result = connect(s, address->ai_addr, address->ai_addrlen)) < 0) {
+    if (vflag) printf("failed.\n");
+  } else {
+    if (vflag) {
+      printf("SUCCESS!\n");
+    } else {
+      printf("PORT READY: %s\n", name);
+    }
+
+    close(s);
+  }
+
+  fflush(stdout);
+
+  return result;
+}
+
+void verbose_connection(struct addrinfo *address, char *name) {
+  u_int16_t port;
+  char *ip = NULL;
 
   if (address->ai_family == AF_INET6) {
     port = ntohs(((struct sockaddr_in6 *) address->ai_addr)->sin6_port);
@@ -205,15 +229,4 @@ int connect_to_address(struct addrinfo *address, char *name) {
 
   printf("Trying %s (%s:%d) ... ", name, ip, port);
   free(ip);
-
-  if ((result = connect(s, address->ai_addr, address->ai_addrlen)) < 0) {
-    printf("failed.\n");
-  } else {
-    printf("SUCCESS!\n");
-    close(s);
-  }
-
-  fflush(stdout);
-
-  return result;
 }

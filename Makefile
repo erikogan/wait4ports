@@ -1,9 +1,9 @@
-CFLAGS=-g
+CFLAGS=-g -Wall
 
 wait4ports: main.o list.o
 	$(CC) $(CFLAGS) -o $@ $^
 
-list.o: list.c list.h usage.h
+list.o: list.c list.h util.h
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 install:
