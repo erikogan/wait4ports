@@ -9,6 +9,7 @@
 
 #include "list.h"
 #include "util.h"
+#include "version.h"
 
 #define SLEEP_ENV_VAR "WAIT4PORTS_SLEEP"
 #define VERBOSE_ENV_VAR "WAIT4PORTS_VERBOSE"
@@ -17,6 +18,7 @@ static char *usage_name;
 static unsigned short verbose_flag = 1;
 
 unsigned short verbosity_from_env(char *);
+void print_version(void);
 
 int main(int argc, char **argv) {
   struct list_node *list;
@@ -25,8 +27,11 @@ int main(int argc, char **argv) {
 
   verbose_flag = verbosity_from_env(VERBOSE_ENV_VAR);
 
-  while ((c = getopt (argc, argv, "qs:")) != -1) {
+  while ((c = getopt (argc, argv, "vqs:")) != -1) {
     switch(c) {
+      case 'v':
+        print_version();
+        exit(0);
       case 'q':
         verbose_flag = 0;
         break;
@@ -71,6 +76,10 @@ int main(int argc, char **argv) {
 void usage() {
   fprintf(stderr, "Usage: %s [-q] [-s <seconds>] [<name>=]<protocol>://<host>:<port> [...]\n", usage_name);
   exit(255);
+}
+
+void print_version() {
+  printf("%s version %s\n", WAIT4PORTS_NAME, WAIT4PORTS_VERSION);
 }
 
 unsigned short verbose() {

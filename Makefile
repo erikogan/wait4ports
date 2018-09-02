@@ -3,8 +3,10 @@ CFLAGS=-g -Wall
 wait4ports: main.o list.o
 	$(CC) $(CFLAGS) -o $@ $^
 
+main.o: main.c util.h version.h
+
 list.o: list.c list.h util.h
-	$(CC) $(CFLAGS) -c -o $@ $<
+#	$(CC) $(CFLAGS) -c -o $@ $<
 
 install:
 	mkdir -p $(PREFIX)/usr/bin
