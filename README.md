@@ -10,11 +10,13 @@ Hostname lookups and IPv6 are supported, and you can give each service your
 own name. Currently only TCP sockets are supported.
 
 An [AlpineLinux Package](https://github.com/alpinelinux/aports/blob/master/community/wait4ports/APKBUILD)
-is available. (Currently in the `@testing` repository.)
+is available. (Currently in the [`@edge`](https://pkgs.alpinelinux.org/packages?name=wait4ports&branch=edge)
+repository.)
 
 ## Options
 
 `-q`: Quiets the output to only announce when a port is ready for connection.
+
 `-s <seconds>`: specifies the number of seconds to sleep between rounds. (Default: 1)
 
 ## Environment
