@@ -31,19 +31,20 @@ struct addrinfo *configure_hints(struct addrinfo *hints) {
   return hints;
 }
 
-
 struct list_node *build_list(int argc, char **argv) {
   int i;
-  struct list_node *head, *tail, *candidate;
+  struct list_node *head = NULL, *tail = NULL, *candidate;
 
   /* the program (and options) have been shaved off the front, start at 0 */
-  head = tail = build_node(argv[0]);
-
-  for (i = 1 ; i < argc ; i++) {
+  for (i = 0 ; i < argc ; i++) {
     candidate = build_node(argv[i]);
     if (candidate) {
-      tail->next = candidate;
-      tail = tail->next;
+      if (!head) {
+        head = tail = candidate;
+      } else {
+        tail->next = candidate;
+        tail = tail->next;
+      }
     }
   }
 
@@ -66,6 +67,7 @@ struct list_node *build_node(char *composite) {
 
   err = getaddrinfo(host, port, &hints, &res);
   if (err != 0) {
+    fprintf(stderr, "%s:%s ", host, port);
     perror ("getaddrinfo");
     return NULL;
   }

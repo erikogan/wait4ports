@@ -3,4 +3,4 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #define WAIT4PORTS_NAME "wait4ports"
-#define WAIT4PORTS_VERSION "0.2.2"
+#define WAIT4PORTS_VERSION "0.2.3"

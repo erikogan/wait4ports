@@ -70,6 +70,12 @@ int main(int argc, char **argv) {
   }
 
   list = build_list(argc - optind, argv + optind);
+
+  if (!list) {
+    fprintf(stderr, "%s\n", "No valid peers found in arguments!");
+    usage();
+  }
+
   process_list(list, sleep_seconds);
 }
 
