@@ -65,11 +65,14 @@ int main(int argc, char **argv) {
 
   usage_name = argv[0];
 
-  if (argc < 2) {
+  argc -= optind;
+  argv += optind;
+
+  if (argc < 1) {
     usage();
   }
 
-  list = build_list(argc - optind, argv + optind);
+  list = build_list(argc, argv);
 
   if (!list) {
     fprintf(stderr, "%s\n", "No valid peers found in arguments!");
