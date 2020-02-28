@@ -5,13 +5,19 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <stdlib.h>
+#include <string.h>
 #include <getopt.h>
 
 #include "list.h"
 #include "util.h"
 #include "version.h"
 
+#define SLEEP_SECONDS 1
 #define SLEEP_ENV_VAR "WAIT4PORTS_SLEEP"
+
+#define TIMEOUT_SECONDS 0
+#define TIMEOUT_ENV_VAR "WAIT4PORTS_TIMEOUT"
+
 #define VERBOSE_ENV_VAR "WAIT4PORTS_VERBOSE"
 
 static char *usage_name;
@@ -19,15 +25,23 @@ static unsigned short verbose_flag = 1;
 
 unsigned short verbosity_from_env(char *);
 void print_version(void);
+int opt_atoi(char *str, char opt, char *env, int from_option);
 
 int main(int argc, char **argv) {
   struct list_node *list;
-  int sleep_from_option = 0, sleep_seconds = SLEEP_SECONDS;
-  char c, *sleep_string = getenv(SLEEP_ENV_VAR);
+
+  int sleep_from_option = 0;
+  int timeout_from_option = 0;
+  int sleep_seconds = SLEEP_SECONDS;
+  int timeout_seconds = TIMEOUT_SECONDS;
+
+  char c;
+  char *sleep_string = getenv(SLEEP_ENV_VAR);
+  char *timeout_string = getenv(TIMEOUT_ENV_VAR);
 
   verbose_flag = verbosity_from_env(VERBOSE_ENV_VAR);
 
-  while ((c = getopt (argc, argv, "vqs:")) != -1) {
+  while ((c = getopt(argc, argv, "vqs:t:")) != -1) {
     switch(c) {
       case 'v':
         print_version();
@@ -38,6 +52,10 @@ int main(int argc, char **argv) {
       case 's':
         sleep_string = optarg;
         sleep_from_option = 1;
+        break;
+      case 't':
+        timeout_string = optarg;
+        timeout_from_option = 1;
         break;
       case '?':
         if (optopt == 's')
@@ -52,16 +70,8 @@ int main(int argc, char **argv) {
     }
   }
 
-  if (sleep_string) {
-    /* prevent atoi from setting the value to zero without a warning */
-    if (!(*sleep_string >= '0' && *sleep_string <= '9')) {
-      char *source = sleep_from_option ? "argument to -s" : "environment variable " SLEEP_ENV_VAR;
-      fprintf (stderr, "Warning: %s [%s] is not a numeric value, sleep value set to 0\n", source, sleep_string);
-      sleep_seconds = 0;
-    } else {
-      sleep_seconds = atoi(sleep_string);
-    }
-  }
+  sleep_seconds = opt_atoi(sleep_string, 's', SLEEP_ENV_VAR, sleep_from_option);
+  timeout_seconds = opt_atoi(timeout_string, 't', TIMEOUT_ENV_VAR, timeout_from_option);
 
   usage_name = argv[0];
 
@@ -79,11 +89,34 @@ int main(int argc, char **argv) {
     usage();
   }
 
-  process_list(list, sleep_seconds);
+  process_list(list, sleep_seconds, timeout_seconds);
+}
+
+int opt_atoi(char *str, char opt, char *env, int from_option) {
+  char *source;
+
+  if (!str) return 0;
+
+  /* prevent atoi from setting the value to zero without a warning */
+  if (!(*str >= '0' && *str <= '9')) {
+    if (from_option) {
+      source = calloc(14, sizeof(char));
+      sprintf(source, "argument to -%c", opt);
+    } else {
+      source = calloc(21 + strlen(env), sizeof(char));
+      sprintf(source, "environment variable %s", env);
+    }
+
+    fprintf (stderr, "Warning: %s [%s] is not a numeric value, sleep value set to 0\n", source, str);
+    free(source);
+    return 0;
+  }
+
+  return atoi(str);
 }
 
 void usage() {
-  fprintf(stderr, "Usage: %s [-q] [-s <seconds>] [<name>=]<protocol>://<host>:<port> [...]\n", usage_name);
+  fprintf(stderr, "Usage: %s [-q] [-s <interval_seconds>] [-t <timeout_seconds>] [<name>=]<protocol>://<host>:<port> [...]\n", usage_name);
   exit(255);
 }
 
