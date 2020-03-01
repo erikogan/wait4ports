@@ -241,7 +241,7 @@ void verbose_connection(struct addrinfo *address, char *name) {
   } else {
     port = -1;
     ip = calloc(8, sizeof(char));
-    strncpy(ip, "Unknown", 7);
+    strncpy(ip, "Unknown", 8);
   }
 
   printf("Trying %s (%s:%d) ... ", name, ip, port);
