@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include <unistd.h>
 
 #include <arpa/inet.h>
@@ -82,10 +83,11 @@ struct list_node *build_node(char *composite) {
   return result;
 }
 
-void process_list(struct list_node *list, int sleep_seconds) {
+void process_list(struct list_node *list, int sleep_seconds, int timeout_seconds) {
   struct list_node *prev, *cur;
   struct addrinfo *address;
   int connected = -1;
+  time_t cur_time, start_time = time(NULL);
 
   while (list) {
     cur = list;
@@ -109,7 +111,20 @@ void process_list(struct list_node *list, int sleep_seconds) {
       }
     }
 
-    if (list) sleep(sleep_seconds);
+    if (list) {
+      if (timeout_seconds) {
+        cur_time = time(NULL);
+        if (start_time + timeout_seconds <= cur_time) {
+          fprintf(stderr, "Timeeout [%d] reached. Exiting.\n", timeout_seconds);
+          exit(255);
+        }
+
+        int remaining = start_time + timeout_seconds - cur_time;
+        if (sleep_seconds > remaining) sleep_seconds = remaining;
+      }
+
+      sleep(sleep_seconds);
+    }
   }
 }
 
@@ -233,7 +248,7 @@ void verbose_connection(struct addrinfo *address, char *name) {
   } else {
     port = -1;
     ip = calloc(8, sizeof(char));
-    strncpy(ip, "Unknown", 7);
+    strncpy(ip, "Unknown", 8);
   }
 
   printf("Trying %s (%s:%d) ... ", name, ip, port);
