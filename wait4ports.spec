@@ -1,6 +1,6 @@
 Summary: A small utility to wait for network availability
 Name: wait4ports
-Version: 0.3.0
+Version: 0.3.1
 Release: 1
 License: MPL 2.0
 Group: Applications/Utilites
@@ -37,6 +37,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+*  Sat Mar 21 2020 Erik Ogan <erik@stealthymonkeys.com> - 0.3.1-1
+- Add make check target to abstract integration testing
+
 *  Sat Mar 21 2020 Erik Ogan <erik@stealthymonkeys.com> - 0.3.0-1
 - Add an optional timeout to wait before exiting in error
 

@@ -12,5 +12,8 @@ install:
 	mkdir -p $(PREFIX)/usr/bin
 	install -m 0755 wait4ports $(PREFIX)/usr/bin/wait4ports
 
+check:
+	sh -c './wait4ports -q -t 1 -s 1 tcp://127.0.0.1:65535 ; status=$$? ; [ $$status -eq 255 ] || [ $$status -eq 0 ]'
+
 clean:
 	rm -f *.o wait4ports
