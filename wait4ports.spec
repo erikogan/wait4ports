@@ -1,6 +1,6 @@
 Summary: A small utility to wait for network availability
 Name: wait4ports
-Version: 0.0.4
+Version: 0.3.0
 Release: 1
 License: MPL 2.0
 Group: Applications/Utilites
@@ -37,13 +37,27 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Sat Sep  1  2018 Erik Ogan <erik@stealthymonkeys.com> - 0.2.1-1
+*  Sat Mar 21 2020 Erik Ogan <erik@stealthymonkeys.com> - 0.3.0-1
+- Add an optional timeout to wait before exiting in error
+
+*  Sat Mar 21 2020 Erik Ogan <erik@stealthymonkeys.com> - 0.2.4-1
+- Fix the SEGV when getaddrinfo does not return an ai_canonname.
+
+* Mon Sep 10 2018  Erik Ogan <erik@stealthymonkeys.com> - 0.2.3-1
+- Fix the case where the first argument is not a valid peer, but subsequent
+  arguments are valid
+
+* Sun Sep  2 2018 Erik Ogan <erik@stealthymonkeys.com> - 0.2.2-1
+- Add 0 to the list of values that will disable verbosity via
+  WAIT4PORTS_VERBOSE environment variable
+
+* Sat Sep  1 2018 Erik Ogan <erik@stealthymonkeys.com> - 0.2.1-1
 - Add -v for version printing
 
-* Sat Sep  1  2018 Erik Ogan <erik@stealthymonkeys.com> - 0.2.0-1
+* Sat Sep  1 2018 Erik Ogan <erik@stealthymonkeys.com> - 0.2.0-1
 - Allow verbosity and sleep interval to be set via options or environment variables
 
-* Sat Sep  1  2018 Erik Ogan <erik@stealthymonkeys.com> - 0.1.0-1
+* Sat Sep  1 2018 Erik Ogan <erik@stealthymonkeys.com> - 0.1.0-1
 - Support IPv6
 - Support hostname lookups
 - Better error notifications
