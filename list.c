@@ -166,20 +166,27 @@ void extract_parts(char *composite, char **name_p, char **proto_p, char **host_p
 }
 
 void normalize_name(struct list_node *node, char *name, char *host, char *port) {
+  size_t hlen, plen;
+  char *normalized_host = node->addresses->ai_canonname;
+
   if (name) {
     node->name = name;
     return;
   }
 
-    size_t hlen = strnlen(node->addresses->ai_canonname, 255),
-           plen = strnlen(port, 255);
+  if(!normalized_host) {
+    normalized_host = host;
+  }
 
-    node->name = calloc(hlen + plen + 2, sizeof(char));
-    strncpy(node->name, node->addresses->ai_canonname, hlen);
-    node->name[hlen] = ':';
-    strncpy(node->name + hlen + 1, port, plen);
-    node->name[hlen + plen + 1] = '\0';
-    node->allocated_name = 1;
+  hlen = strnlen(normalized_host, 255);
+  plen = strnlen(port, 255);
+
+  node->name = calloc(hlen + plen + 2, sizeof(char));
+  strncpy(node->name, normalized_host, hlen);
+  node->name[hlen] = ':';
+  strncpy(node->name + hlen + 1, port, plen);
+  node->name[hlen + plen + 1] = '\0';
+  node->allocated_name = 1;
 }
 
 int connect_to_address(struct addrinfo *address, char *name) {
