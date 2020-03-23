@@ -59,11 +59,11 @@ int main(int argc, char **argv) {
         break;
       case '?':
         if (optopt == 's')
-          fprintf (stderr, "Option -%c requires an argument.\n", optopt);
-        else if (isprint (optopt))
-          fprintf (stderr, "Unknown option `-%c'.\n", optopt);
+          fprintf(stderr, "Option -%c requires an argument.\n", optopt);
+        else if (isprint(optopt))
+          fprintf(stderr, "Unknown option `-%c'.\n", optopt);
         else
-          fprintf (stderr, "Unknown option character `\\x%x'.\n", optopt);
+          fprintf(stderr, "Unknown option character `\\x%x'.\n", optopt);
         usage();
       default:
         usage();
@@ -107,7 +107,7 @@ int opt_atoi(char *str, char opt, char *env, int from_option) {
       sprintf(source, "environment variable %s", env);
     }
 
-    fprintf (stderr, "Warning: %s [%s] is not a numeric value, sleep value set to 0\n", source, str);
+    fprintf(stderr, "Warning: %s [%s] is not a numeric value, set to 0\n", source, str);
     free(source);
     return 0;
   }
@@ -142,7 +142,7 @@ unsigned short verbosity_from_env(char *name) {
       break;
     case 'o':
     case 'O':
-      switch (*(value+1)) {
+      switch(*(value+1)) {
         case 'f':
         case 'F':
           return(0);

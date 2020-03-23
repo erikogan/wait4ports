@@ -24,7 +24,7 @@ void remove_node(struct list_node **, struct list_node **, struct list_node **);
 void verbose_connection(struct addrinfo *, char *);
 
 struct addrinfo *configure_hints(struct addrinfo *hints) {
-  memset (hints, 0, sizeof (*hints));
+  memset(hints, 0, sizeof(*hints));
   hints->ai_family = PF_UNSPEC;
   hints->ai_socktype = SOCK_STREAM;
   hints->ai_protocol = IPPROTO_TCP;
@@ -69,7 +69,7 @@ struct list_node *build_node(char *composite) {
   err = getaddrinfo(host, port, &hints, &res);
   if (err != 0) {
     fprintf(stderr, "%s:%s ", host, port);
-    perror ("getaddrinfo");
+    perror("getaddrinfo");
     return NULL;
   }
 
