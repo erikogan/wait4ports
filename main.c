@@ -40,6 +40,7 @@ int main(int argc, char **argv) {
   char *timeout_string = getenv(TIMEOUT_ENV_VAR);
 
   verbose_flag = verbosity_from_env(VERBOSE_ENV_VAR);
+  usage_name = argv[0];
 
   while ((c = getopt(argc, argv, "vqs:t:")) != -1) {
     switch(c) {
@@ -73,8 +74,6 @@ int main(int argc, char **argv) {
   sleep_seconds = opt_atoi(sleep_string, 's', SLEEP_ENV_VAR, sleep_from_option, SLEEP_SECONDS);
   timeout_seconds = opt_atoi(timeout_string, 't', TIMEOUT_ENV_VAR, timeout_from_option, TIMEOUT_SECONDS);
 
-  usage_name = argv[0];
-
   argc -= optind;
   argv += optind;
 
@@ -100,10 +99,10 @@ int opt_atoi(char *str, char opt, char *env, int from_option, int default_value)
   /* prevent atoi from setting the value to zero without a warning */
   if (!(*str >= '0' && *str <= '9')) {
     if (from_option) {
-      source = calloc(14, sizeof(char));
+      source = calloc(15, sizeof(char));
       sprintf(source, "argument to -%c", opt);
     } else {
-      source = calloc(21 + strlen(env), sizeof(char));
+      source = calloc(22 + strlen(env), sizeof(char));
       sprintf(source, "environment variable %s", env);
     }
 
