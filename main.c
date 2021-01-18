@@ -25,7 +25,7 @@ static unsigned short verbose_flag = 1;
 
 unsigned short verbosity_from_env(char *);
 void print_version(void);
-int opt_atoi(char *str, char opt, char *env, int from_option);
+int opt_atoi(char *str, char opt, char *env, int from_option, int default_value);
 
 int main(int argc, char **argv) {
   struct list_node *list;
@@ -70,8 +70,8 @@ int main(int argc, char **argv) {
     }
   }
 
-  sleep_seconds = opt_atoi(sleep_string, 's', SLEEP_ENV_VAR, sleep_from_option);
-  timeout_seconds = opt_atoi(timeout_string, 't', TIMEOUT_ENV_VAR, timeout_from_option);
+  sleep_seconds = opt_atoi(sleep_string, 's', SLEEP_ENV_VAR, sleep_from_option, SLEEP_SECONDS);
+  timeout_seconds = opt_atoi(timeout_string, 't', TIMEOUT_ENV_VAR, timeout_from_option, TIMEOUT_SECONDS);
 
   usage_name = argv[0];
 
@@ -92,10 +92,10 @@ int main(int argc, char **argv) {
   process_list(list, sleep_seconds, timeout_seconds);
 }
 
-int opt_atoi(char *str, char opt, char *env, int from_option) {
+int opt_atoi(char *str, char opt, char *env, int from_option, int default_value) {
   char *source;
 
-  if (!str) return 0;
+  if (!str) return default_value;
 
   /* prevent atoi from setting the value to zero without a warning */
   if (!(*str >= '0' && *str <= '9')) {
